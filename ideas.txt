@@ -1,0 +1,8 @@
+A cross-platform application (mobile or PC) where you can take a picture of a space
+and an LLM recommends how you can organize things in that
+space.
+
+Features
+Provides censorship of names/license plates
+Trained to recognize messy and organized spaces
+Asks for camera permission
