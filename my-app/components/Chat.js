@@ -6,15 +6,17 @@ const Chat = () => {
   const [text, setText] = useState('');
 
   return (
-    <SafeAreaView style={tailwind`justify-end flex-1`}>
+    <SafeAreaView style={tailwind`justify-end flex-1 inline-block`}>
       <TextInput 
         style={tailwind`h-10 m-3 border p-2`}
         onChangeText={text}
         placeholder="Type a message"
       />
-      <Pressable style={tailwind`absolute self-center right-0`}>
-        <Text>Send</Text>
-      </Pressable>
+      <Button
+        style={tailwind`bg-blue-500 text-white`}
+        title="Send"
+      />
+      
     </SafeAreaView>
   );
 }
