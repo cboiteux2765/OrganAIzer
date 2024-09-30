@@ -1,18 +1,32 @@
 from transformers import AutoTokenizer, AutoModelForCausalLM
-from PIL import Image
-from diffusers import StableDiffusionImg2ImgPipeline
+import openvino as ov
+import ipywidgets as widgets
 import gradio as gr
-import torch
+from pathlib import Path
 import json
-import time
 
-# Load your custom Hugging Face model
+# Initialize OpenVINO
+core = ov.Core()
+device = "NPU"
+MODEL_PATH = Path("model")
+MODEL_NAME = "Moondream"
+
+# Initialize Hugging Face
 model_id = "vikhyatk/moondream2"
 revision = "2024-07-23"
 model = AutoModelForCausalLM.from_pretrained(
     model_id, trust_remote_code=True, revision=revision
 )
 tokenizer = AutoTokenizer.from_pretrained(model_id)
+
+# OpenVINO Optimization
+def ov_optimize():
+    core = ov.Core()
+    optimized_model = core.read_model(model=model)
+    compiled_model = core.read_model(model=optimized_model,device_name=device)
+    ov.save_model(compiled_model, MODEL_PATH / f"{MODEL_NAME}.xml")
+
+# Gradio functions
 
 def generate_text(image):
     prompt = "This room seems messy. How can I organize the items?"
@@ -26,7 +40,7 @@ def respond(image):
    text = generate_text(image)
    return text
 
-# Create the Gradio interface
+# Gradio interface
 demo = gr.Interface(
     fn=respond,
     inputs=gr.Image(type="pil", label="Upload Image"),
